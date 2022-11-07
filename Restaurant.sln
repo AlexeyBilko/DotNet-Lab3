@@ -4,12 +4,16 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.1.32210.238
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Restaurant", "Restaurant\Restaurant.csproj", "{1ACCB5D3-C9D9-49AC-A92C-1EDC6C508780}"
+	ProjectSection(ProjectDependencies) = postProject
+		{CA1F5516-1367-4A99-8196-CD8ED2237452} = {CA1F5516-1367-4A99-8196-CD8ED2237452}
+		{73E38F4A-43F6-4317-B39D-446120411701} = {73E38F4A-43F6-4317-B39D-446120411701}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DomainLayer", "DomainLayer\DomainLayer.csproj", "{16488707-153E-4AB3-842D-92E222A8F6B1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepositoryLayer", "RepositoryLayer\RepositoryLayer.csproj", "{CA1F5516-1367-4A99-8196-CD8ED2237452}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepositoryLayer", "RepositoryLayer\RepositoryLayer.csproj", "{CA1F5516-1367-4A99-8196-CD8ED2237452}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceLayer", "ServiceLayer\ServiceLayer.csproj", "{73E38F4A-43F6-4317-B39D-446120411701}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServiceLayer", "ServiceLayer\ServiceLayer.csproj", "{73E38F4A-43F6-4317-B39D-446120411701}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -18,6 +18,7 @@ namespace RepositoryLayer.Repository
             var result = context
                 .Orders
                 .Where(order => order.TableNumber == tableNumber);
+
             return result;
         }
     }

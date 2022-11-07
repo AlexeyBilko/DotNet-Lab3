@@ -1,7 +1,22 @@
+using Microsoft.EntityFrameworkCore;
+using RepositoryLayer;
+using ServiceLayer.Extensions;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+string str = builder.Configuration.GetConnectionString("DefaultConnection");
+//builder.Services.AddDbContext<ApplicationDbContext>(options =>
+//    options.UseSqlServer(str));
+
+builder.Services.AddRestaurantDbContext(str);
+builder.Services.AddRepositoryDependencies();
+builder.Services.AddServicesDependencies();
+
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession();
 
 var app = builder.Build();
 

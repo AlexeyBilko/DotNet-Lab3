@@ -10,37 +10,22 @@ namespace ServiceLayer.Extensions
 {
     public static class AddProvidersExtensions
     {
-        public static void AddDbContext(this IServiceCollection services, string connectionStr)
+        public static void AddServicesDependencies(this IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDbContext>(options =>
-            {
-                options.UseSqlServer(connectionStr);
-            });
-        }
+            services.AddScoped<IIngredientService, IngredientService>();
+            services.AddScoped<IngredientService, IngredientService>();
 
-        public static void AddDependencies(this IServiceCollection services)
-        {
-            services.AddScoped<IService<Ingredient, IngredientDTO>, PlanService>();
-            services.AddScoped<PlanService, PlanService>();
-            services.AddScoped<IRepository<Ingredient>, IngredientRepository>();
+            services.AddScoped<IMealService, MealService>();
+            services.AddScoped<MealService, MealService>();
 
-            services.AddScoped<IService<Meal,MealDTO>, SubPagesService>();
-            services.AddScoped<SubPagesService, SubPagesService>();
-            services.AddScoped<IRepository<Meal>, MealRepository>();
+            services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped<OrderService, OrderService>();
 
-            services.AddScoped<IService<Order, OrderDTO>, SubPagesStatService>();
-            services.AddScoped<SubPagesStatService, SubPagesStatService>();
-            services.AddScoped<IRepository<Order>, OrderRepository>();
+            services.AddScoped<IMealService, MealService>();
+            services.AddScoped<MealService, MealService>();
 
-            services.AddScoped<IService<MealInOrder, MealInOrderDTO>, TransactionService>();
-            services.AddScoped<TransactionService, TransactionService>();
-            services.AddScoped<IRepository<MealInOrder>, MealInOrderRepository>();
-
-            services.AddScoped<IService<Pricelist, PricelistDTO>, UserPlanService>();
-            services.AddScoped<UserPlanService, UserPlanService>();
-            services.AddScoped<IRepository<Pricelist>, PricelistRepository>();
-
-            services.AddTransient<DbContext, LeadSubContext>();
+            services.AddScoped<IPricelistService, PricelistService>();
+            services.AddScoped<PricelistService, PricelistService>();
         }
     }
 }

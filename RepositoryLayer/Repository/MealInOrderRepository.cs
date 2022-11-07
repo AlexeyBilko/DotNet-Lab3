@@ -18,7 +18,10 @@ namespace RepositoryLayer.Repository
             var mealToRemove = context
                 .MealInOrders
                 .FirstOrDefault(mealInOrder => mealInOrder.MealId == mealId & mealInOrder.OrderId == orderId);
-            context.MealInOrders.Remove(mealToRemove);
+            if (mealToRemove != null)
+            {
+                context.MealInOrders.Remove(mealToRemove);
+            }
         }
     }
 }

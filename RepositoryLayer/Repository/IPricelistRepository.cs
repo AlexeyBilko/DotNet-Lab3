@@ -9,5 +9,6 @@ namespace RepositoryLayer.Repository
 {
     public interface IPricelistRepository : IRepository<Pricelist>
     {
+        public Pricelist GetPriceByMeal(int mealId);
     }
 }

@@ -16,7 +16,7 @@ namespace RepositoryLayer.Repository
         public IEnumerable<Ingredient> GetIngredientInMeal(int mealId)
         {
             var result = context
-                .Set<Ingredient>()
+                .Ingredients
                 .Where(ingredient => ingredient.MealId == mealId)
                 .ToList();
             return result;

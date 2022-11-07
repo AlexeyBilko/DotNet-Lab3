@@ -12,5 +12,12 @@ namespace RepositoryLayer.Repository
         public PricelistRepository(ApplicationDbContext context) : base(context)
         {
         }
+        public Pricelist GetPriceByMeal(int mealId)
+        {
+            var result = context
+                .Pricelist
+                .Where(pricelist => pricelist.MealId == mealId);
+            return result.First();
+        }
     }
 }
