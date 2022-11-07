@@ -8,7 +8,7 @@ namespace RepositoryLayer.Repository
 {
     public abstract class GenericRepository<T> : IRepository<T> where T : BaseEntity
     {
-        private readonly ApplicationDbContext context;
+        public ApplicationDbContext context;
         private DbSet<T> table;
 
         public GenericRepository(ApplicationDbContext context)
