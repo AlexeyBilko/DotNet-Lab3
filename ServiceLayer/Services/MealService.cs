@@ -44,5 +44,41 @@ namespace ServiceLayer.Services
 
             return meal;
         }
+
+        public Task<MealDTO> AddAsync(MealDTO entity)
+        {
+            return Task.Run(() =>
+            {
+                Meal newEntity = mapper.Map<MealDTO, Meal>(entity);
+                unitOfWork.MealRepository.Create(newEntity);
+                unitOfWork.MealRepository.SaveChanges();
+                return mapper.Map<Meal, MealDTO>(newEntity);
+            });
+        }
+
+        public Task<MealDTO> DeleteAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task UpdateAsync(MealDTO entity)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<MealDTO>> GetAllAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public MealDTO Get(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<MealDTO> GetAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

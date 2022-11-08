@@ -1,16 +1,17 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Restaurant.Models;
 using System.Diagnostics;
+using ServiceLayer.Services;
 
 namespace Restaurant.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private MealService mealService;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(MealService mealService)
         {
-            _logger = logger;
+            this.mealService = mealService;
         }
 
         public IActionResult Index()
