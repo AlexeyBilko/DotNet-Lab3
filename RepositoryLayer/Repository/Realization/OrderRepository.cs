@@ -7,7 +7,7 @@ using DomainLayer.Models;
 
 namespace RepositoryLayer.Repository
 {
-    public class OrderRepository : GenericRepository<Order>, IOrderRepository
+    public class OrderRepository : GenericRepository<Order,int>, IOrderRepository
     {
         public OrderRepository(ApplicationDbContext context) : base(context)
         {

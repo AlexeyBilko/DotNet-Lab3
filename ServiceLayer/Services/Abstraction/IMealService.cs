@@ -8,8 +8,8 @@ using ServiceLayer.DTO;
 
 namespace ServiceLayer.Services
 {
-    public interface IPricelistService : IService<Pricelist, PricelistDTO>
+    public interface IMealService : IService<Meal, MealDTO, int>
     {
-        public PricelistDTO GetPriceByMealId(int mealId);
+        public IEnumerable<MealDTO> GetMealsByName(string mealName);
     }
 }

@@ -7,8 +7,8 @@ using DomainLayer.Models;
 
 namespace RepositoryLayer.Repository
 {
-    public interface IIngredientRepository : IRepository<Ingredient>
+    public interface IPricelistRepository : IRepository<Pricelist,int>
     {
-        public IEnumerable<Ingredient> GetIngredientInMeal(int mealId);
+        public Pricelist GetPriceByMeal(int mealId);
     }
 }

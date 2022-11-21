@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DomainLayer.Models
 {
-    public class Ingredient : BaseEntity
+    public class Ingredient : BaseEntity<int>
     {
         public string Name { get; set; }
         public float Weight { get; set; }

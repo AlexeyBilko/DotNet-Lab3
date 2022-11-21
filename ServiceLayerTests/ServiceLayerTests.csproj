@@ -20,4 +20,14 @@
     <ProjectReference Include="..\ServiceLayer\ServiceLayer.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="Unit Tests\" />
+    <None Remove="Unit Tests\IngredientService.Tests" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Unit Tests\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Unit Tests\IngredientServiceTests.cs" />
+  </ItemGroup>
 </Project>

@@ -7,7 +7,7 @@ using DomainLayer.Models;
 
 namespace RepositoryLayer.Repository
 {
-    public class IngredientRepository : GenericRepository<Ingredient>, IIngredientRepository
+    public class IngredientRepository : GenericRepository<Ingredient, int>, IIngredientRepository
     {
         public IngredientRepository(ApplicationDbContext context) : base(context)
         {

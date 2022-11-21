@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DomainLayer.Models
 {
-    public class Meal : BaseEntity
+    public class Meal : BaseEntity<int>
     {
         public string Name { get; set; }
         public string Description { get; set; }

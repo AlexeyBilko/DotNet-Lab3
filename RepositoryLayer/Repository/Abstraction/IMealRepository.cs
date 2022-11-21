@@ -7,9 +7,9 @@ using DomainLayer.Models;
 
 namespace RepositoryLayer.Repository
 {
-    public interface IMealRepository : IRepository<Meal>
+    public interface IMealRepository : IRepository<Meal, int>
     {
-        public IEnumerable<Meal> GetMealsByName(string mealName);
-        public IEnumerable<Meal> GetMealsInOrder(int orderId);
+        public IQueryable<Meal> GetMealsByName(string mealName);
+        public IQueryable<Meal> GetMealsInOrder(int orderId);
     }
 }

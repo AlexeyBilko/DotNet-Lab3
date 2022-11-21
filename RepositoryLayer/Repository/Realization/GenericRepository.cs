@@ -17,7 +17,7 @@ namespace RepositoryLayer.Repository
             table = context.Set<T>();
         }
 
-        public async void Create(T entity)
+        public async Task<T> CreateAsync(T entity)
         {
             if (entity == null)
             {
@@ -25,51 +25,55 @@ namespace RepositoryLayer.Repository
             }
             await table.AddAsync(entity);
             await context.SaveChangesAsync();
+            return entity;
         }
 
-        public void Delete(T entity)
+        public async Task<T> DeleteAsync(T entity)
         {
             if (entity == null)
             {
                 throw new ArgumentNullException(nameof(entity));
             }
             table.Remove(entity);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
+            return entity;
         }
 
-        public T Get(TKey Id)
+        public async Task<T?> Get(TKey Id)
         {
-            //await table.FindAsync(Id);
-            
-            return table.SingleOrDefault(x => x.Id == Id) ?? throw new InvalidOperationException("not found");
+            return await table.FindAsync(Id);
         }
 
-        public IEnumerable<T> GetAll()
+        public async Task<IEnumerable<T>> GetAllAsync()
         {
-            return table;
+            return await table.ToListAsync();
         }
+
         //TODO : read about specifications and IQueryable
         public IQueryable<T> GetAllQueryable()
         {
             return table.AsQueryable();
         }
+
         public async void SaveChangesAsync()
         {
             await context.SaveChangesAsync();
         }
+
         public void SaveChanges()
         {
             context.SaveChanges();
         }
 
-        public void Update(T entity)
+        public async Task<T> UpdateAsync(T entity)
         {
             if (entity == null)
             {
                 throw new ArgumentNullException(nameof(entity));
             }
             context.Entry(entity).State = EntityState.Modified;
-            context.SaveChanges();
+            await context.SaveChangesAsync();
+            return entity;
         }
     }
 }

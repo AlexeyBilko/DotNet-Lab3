@@ -61,7 +61,7 @@ namespace ServiceLayerTests
 
                 mealService.AddAsync(meal);
 
-                var actual = mealService.GetMealById(1);
+                var actual = mealService.GetAsync(1);
 
                 actual.Should().BeEquivalentTo(meal);
 
@@ -114,7 +114,7 @@ namespace ServiceLayerTests
 
                 orderService.CreateOrder(order.TableNumber, order.OrderedTime);
 
-                var actual = orderService.GetOrderById(id);
+                var actual = orderService.GetAsync(id);
 
                 actual.Should().BeEquivalentTo(order);
 
@@ -237,7 +237,7 @@ namespace ServiceLayerTests
 
                 await mealService.AddAsync(meal);
                 await ingredientService.AddAsync(ingredient);
-                var result = ingredientService.GetIngredientById(id);
+                var result = ingredientService.GetAsync(id);
 
                 result.Should().BeEquivalentTo(ingredient);
 

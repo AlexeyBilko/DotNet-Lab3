@@ -15,4 +15,12 @@
     <ProjectReference Include="..\RepositoryLayer\RepositoryLayer.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="Services\Abstraction\" />
+    <None Remove="Services\Realization\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Services\Abstraction\" />
+    <Folder Include="Services\Realization\" />
+  </ItemGroup>
 </Project>

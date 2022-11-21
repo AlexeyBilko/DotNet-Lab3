@@ -7,22 +7,20 @@ using DomainLayer.Models;
 
 namespace RepositoryLayer.Repository
 {
-    public class MealRepository : GenericRepository<Meal>, IMealRepository
+    public class MealRepository : GenericRepository<Meal,int>, IMealRepository
     {
         public MealRepository(ApplicationDbContext context) : base(context)
         {
         }
 
-        public IEnumerable<Meal> GetMealsByName(string mealName)
+        public IQueryable<Meal> GetMealsByName(string mealName)
         {
-            var result = context
+            return context
                 .Set<Meal>()
-                .Where(meal => meal.Name == mealName)
-                .ToList();
-            return result;
+                .Where(meal => meal.Name == mealName);
         }
 
-        public IEnumerable<Meal> GetMealsInOrder(int orderId)
+        public IQueryable<Meal> GetMealsInOrder(int orderId)
         {
             return context
                 .MealInOrders
@@ -30,9 +28,7 @@ namespace RepositoryLayer.Repository
                 .Join(context.Meals,
                     mealInOrder => mealInOrder.MealId,
                     meal => meal.Id,
-                    (mealInOrder, meal) => meal)
-                .ToList();
-            //return result;
+                    (mealInOrder, meal) => meal);
         }
     }
 }

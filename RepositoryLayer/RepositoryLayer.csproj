@@ -23,4 +23,12 @@
     <ProjectReference Include="..\DomainLayer\DomainLayer.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="Repository\Abstraction\" />
+    <None Remove="Repository\Realization\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Repository\Abstraction\" />
+    <Folder Include="Repository\Realization\" />
+  </ItemGroup>
 </Project>

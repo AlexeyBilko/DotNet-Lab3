@@ -103,7 +103,7 @@ namespace RepositoryLayer.Tests
                 using (var context = new ApplicationDbContext(options))
                 {
                     OrderRepository target = new OrderRepository(context);
-                    target.Create(order);
+                    target.CreateAsync(order);
                 }
 
                 using (var context = new ApplicationDbContext(options))
@@ -128,7 +128,7 @@ namespace RepositoryLayer.Tests
                 using (var context = new ApplicationDbContext(options))
                 {
                     OrderRepository target = new OrderRepository(context);
-                    target.Create(order);
+                    target.CreateAsync(order);
                     target.Delete(order);
                 }
 
@@ -159,7 +159,7 @@ namespace RepositoryLayer.Tests
                 using (var context = new ApplicationDbContext(options))
                 {
                     OrderRepository target = new OrderRepository(context);
-                    target.Create(order);
+                    target.CreateAsync(order);
                     target.Update(updatedOrder);
                 }
 
@@ -186,7 +186,7 @@ namespace RepositoryLayer.Tests
                 {
                     OrderRepository target = new OrderRepository(context);
 
-                    target.Create(order);
+                    target.CreateAsync(order);
                     target.Get(order.Id).Should().BeEquivalentTo(order);
 
                     context.Database.EnsureDeleted();
@@ -207,7 +207,7 @@ namespace RepositoryLayer.Tests
                 {
                     OrderRepository target = new OrderRepository(context);
 
-                    target.Create(order);
+                    target.CreateAsync(order);
                     target.SaveChanges();
                 }
 
@@ -235,7 +235,7 @@ namespace RepositoryLayer.Tests
                 {
                     OrderRepository target = new OrderRepository(context);
 
-                    target.Create(order);
+                    target.CreateAsync(order);
                     target.SaveChangesAsync();
                 }
 

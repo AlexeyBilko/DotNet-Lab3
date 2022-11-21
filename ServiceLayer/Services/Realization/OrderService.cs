@@ -34,19 +34,10 @@ namespace ServiceLayer.Services
                 OrderedTime = createdTime
             };
             var mappedEntity = mapper.Map<OrderDTO, Order>(order);
-            unitOfWork.OrderRepository.Create(mappedEntity);
+            unitOfWork.OrderRepository.CreateAsync(mappedEntity);
             unitOfWork.SaveChanges();
 
             order.Id = mappedEntity.Id;
-            // if some one else update record after yours creation and before line number 41 update changes will no visible 
-            // for better concurtency aproach use RowVersion [optional]
-
-            //var created = unitOfWork.OrderRepository.GetOrdersByTable(tableNumber)
-            //    .FirstOrDefault(order => order.OrderedTime == createdTime);
-            //if (created != null)
-            //{
-            //    order = mapper.Map<Order, OrderDTO>(created);
-            //}
 
             return order;
         }
@@ -64,15 +55,19 @@ namespace ServiceLayer.Services
 
                 unitOfWork
                     .MealInOrderRepository
-                    .Create(mealToAdd);
+                    .CreateAsync(mealToAdd);
                 unitOfWork.SaveChanges();
             }
         }
 
-        public void RemoveMealFromOrder(int orderId, int mealId)
+        public async void RemoveMealFromOrder(int orderId, int mealId)
         {
-            unitOfWork.MealInOrderRepository.RemoveMealFromOrder(orderId, mealId);
-            unitOfWork.SaveChanges();
+            Meal? mealToRemove = await unitOfWork.MealRepository.Get(mealId);
+            if(mealToRemove != null)
+            { 
+                unitOfWork.MealInOrderRepository.FindMealAndRemoveFromOrder(mealToRemove, orderId);
+                unitOfWork.SaveChanges();
+            }
         }
 
         public IEnumerable<MealDTO> GetMealsInOder(int orderId)
@@ -85,14 +80,52 @@ namespace ServiceLayer.Services
             return meals;
         }
 
-        public OrderDTO GetOrderById(int orderId)
+        public async Task<OrderDTO> AddAsync(OrderDTO entity)
         {
-            var order = mapper.Map<Order, OrderDTO>(unitOfWork
-                .OrderRepository
-                .Get(orderId)
-            );
+            var mappedEntity = mapper.Map<OrderDTO, Order>(entity);
 
-            return order;
+            await unitOfWork.OrderRepository.CreateAsync(mappedEntity);
+            unitOfWork.SaveChanges();
+
+            entity.Id = mappedEntity.Id;
+
+            return entity;
+
+        }
+
+        public async Task<OrderDTO> DeleteAsync(OrderDTO entity)
+        {
+            var mappedEntity = mapper.Map<OrderDTO, Order>(entity);
+
+            await unitOfWork.OrderRepository.DeleteAsync(mappedEntity);
+            unitOfWork.SaveChanges();
+
+            return entity;
+        }
+
+        public async Task<OrderDTO> UpdateAsync(OrderDTO entity)
+        {
+            var mappedEntity = mapper.Map<OrderDTO, Order>(entity);
+
+            await unitOfWork.OrderRepository.UpdateAsync(mappedEntity);
+            unitOfWork.SaveChanges();
+
+            return entity;
+        }
+
+        public async Task<IEnumerable<OrderDTO>> GetAllAsync()
+        {
+            return (await unitOfWork.OrderRepository.GetAllAsync()).Select(mapper.Map<Order, OrderDTO>);
+        }
+
+        public async Task<OrderDTO> GetAsync(int id)
+        {
+            var order = await unitOfWork.OrderRepository.Get(id);
+            if (order != null)
+            {
+                return mapper.Map<Order, OrderDTO>(order);
+            }
+            throw new ArgumentException("not found");
         }
     }
 }

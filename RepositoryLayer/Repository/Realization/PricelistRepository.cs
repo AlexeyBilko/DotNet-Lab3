@@ -7,7 +7,7 @@ using DomainLayer.Models;
 
 namespace RepositoryLayer.Repository
 {
-    public class PricelistRepository : GenericRepository<Pricelist>, IPricelistRepository
+    public class PricelistRepository : GenericRepository<Pricelist,int>, IPricelistRepository
     {
         public PricelistRepository(ApplicationDbContext context) : base(context)
         {

@@ -7,8 +7,8 @@ using DomainLayer.Models;
 
 namespace RepositoryLayer.Repository
 {
-    public interface IOrderRepository : IRepository<Order>
+    public interface IMealInOrderRepository : IRepository<MealInOrder, int>
     {
-        public IEnumerable<Order> GetOrdersByTable(int tableNumber);
+        public void FindMealAndRemoveFromOrder(Meal meal, int orderId);
     }
 }

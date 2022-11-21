@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DomainLayer.Models
 {
-    public class Order : BaseEntity
+    public class Order : BaseEntity<int>
     {
         public int TableNumber { get; set; }
         public DateTime OrderedTime { get; set; }
