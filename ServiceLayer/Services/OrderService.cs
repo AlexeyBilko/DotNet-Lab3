@@ -33,23 +33,27 @@ namespace ServiceLayer.Services
                 TableNumber = tableNumber,
                 OrderedTime = createdTime
             };
-
-            unitOfWork.OrderRepository.Create(mapper.Map<OrderDTO, Order>(order));
+            var mappedEntity = mapper.Map<OrderDTO, Order>(order);
+            unitOfWork.OrderRepository.Create(mappedEntity);
             unitOfWork.SaveChanges();
 
-            var created = unitOfWork.OrderRepository.GetOrdersByTable(tableNumber)
-                .FirstOrDefault(order => order.OrderedTime == createdTime);
-            if (created != null)
-            {
-                order = mapper.Map<Order, OrderDTO>(created);
-            }
+            order.Id = mappedEntity.Id;
+            // if some one else update record after yours creation and before line number 41 update changes will no visible 
+            // for better concurtency aproach use RowVersion [optional]
+
+            //var created = unitOfWork.OrderRepository.GetOrdersByTable(tableNumber)
+            //    .FirstOrDefault(order => order.OrderedTime == createdTime);
+            //if (created != null)
+            //{
+            //    order = mapper.Map<Order, OrderDTO>(created);
+            //}
 
             return order;
         }
 
         public void AddMealToOrder(int orderId, int mealId)
         {
-            if (unitOfWork.MealRepository.Get(mealId) != null || 
+            if (unitOfWork.MealRepository.Get(mealId) != null||  
                 unitOfWork.OrderRepository.Get(orderId) != null)
             {
                 var mealToAdd = new MealInOrder()

@@ -24,7 +24,7 @@ namespace RepositoryLayer.Repository
 
         public IEnumerable<Meal> GetMealsInOrder(int orderId)
         {
-            var result = context
+            return context
                 .MealInOrders
                 .Where(mealInOrder => mealInOrder.OrderId == orderId)
                 .Join(context.Meals,
@@ -32,7 +32,7 @@ namespace RepositoryLayer.Repository
                     meal => meal.Id,
                     (mealInOrder, meal) => meal)
                 .ToList();
-            return result;
+            //return result;
         }
     }
 }

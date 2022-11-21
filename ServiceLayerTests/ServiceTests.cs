@@ -27,7 +27,7 @@ namespace ServiceLayerTests
                 .UseInMemoryDatabase(databaseName: "RestaurantTestDb")
                 .Options;
 
-            var context = new ApplicationDbContext(options);
+            context = new ApplicationDbContext(options);
 
             unitOfWork = new Mock<UnitOfWork>(context, new IngredientRepository(context),
                 new OrderRepository(context), new MealRepository(context), new MealInOrderRepository(context),
@@ -35,11 +35,16 @@ namespace ServiceLayerTests
 
             mealService = new MealService(unitOfWork.Object);
             orderService = new OrderService(unitOfWork.Object);
+            pricelistService = new PricelistService(unitOfWork.Object);
+            ingredientService = new IngredientService(unitOfWork.Object);
         }
 
+        private ApplicationDbContext context;
         private Mock<UnitOfWork> unitOfWork;
         private MealService mealService;
         private OrderService orderService;
+        private PricelistService pricelistService;
+        private IngredientService ingredientService;
 
         public class MealServiceTests : ServiceTests
         {
@@ -59,6 +64,8 @@ namespace ServiceLayerTests
                 var actual = mealService.GetMealById(1);
 
                 actual.Should().BeEquivalentTo(meal);
+
+                context.Database.EnsureDeleted();
             }
 
             [Test]
@@ -87,6 +94,8 @@ namespace ServiceLayerTests
 
                 actual.Should().ContainEquivalentOf(meal1);
                 actual.Should().ContainEquivalentOf(meal2);
+
+                await context.Database.EnsureDeletedAsync();
             }
         }
 
@@ -108,6 +117,160 @@ namespace ServiceLayerTests
                 var actual = orderService.GetOrderById(id);
 
                 actual.Should().BeEquivalentTo(order);
+
+                context.Database.EnsureDeleted();
+            }
+
+            [Test]
+            public async Task AddMealToOrder_Meal_NewElementAdded()
+            {
+                int id = AutoFaker.Generate<int>();
+                var order = new OrderDTO()
+                {
+                    Id = id,
+                    TableNumber = AutoFaker.Generate<int>(),
+                    OrderedTime = DateTime.Now
+                };
+                var meal = new MealDTO()
+                {
+                    Id = id,
+                    Name = AutoFaker.Generate<string>(),
+                    Description = AutoFaker.Generate<string>(),
+                    Weight = AutoFaker.Generate<float>()
+                };
+
+                orderService.CreateOrder(order.TableNumber, order.OrderedTime);
+                await mealService.AddAsync(meal);
+
+                orderService.AddMealToOrder(order.Id, meal.Id);
+
+                var actual = context.MealInOrders.Single();
+
+                actual.MealId.Should().Be(meal.Id);
+                actual.OrderId.Should().Be(order.Id);
+
+                await context.Database.EnsureDeletedAsync();
+            }
+
+            [Test]
+            public async Task RemoveMealFromOrder_Order_ElementRemoved()
+            {
+                int id = AutoFaker.Generate<int>();
+                var order = new OrderDTO()
+                {
+                    Id = id,
+                    TableNumber = AutoFaker.Generate<int>(),
+                    OrderedTime = DateTime.Now
+                };
+                var meal = new MealDTO()
+                {
+                    Id = id,
+                    Name = AutoFaker.Generate<string>(),
+                    Description = AutoFaker.Generate<string>(),
+                    Weight = AutoFaker.Generate<float>()
+                };
+
+                orderService.CreateOrder(order.TableNumber, order.OrderedTime);
+                await mealService.AddAsync(meal);
+
+                orderService.AddMealToOrder(order.Id, meal.Id);
+                orderService.RemoveMealFromOrder(order.Id, meal.Id);
+
+                context.MealInOrders.ToList().Should().BeEmpty();
+
+                await context.Database.EnsureDeletedAsync();
+            }
+        }
+
+        public class PricelistServiceTest : ServiceTests
+        {
+            [Test]
+            public async Task GetPriceByMeal_Meal_GetsCorrectPrice()
+            {
+                int id = AutoFaker.Generate<int>();
+                var meal = new MealDTO()
+                {
+                    Id = id,
+                    Name = AutoFaker.Generate<string>(),
+                    Description = AutoFaker.Generate<string>(),
+                    Weight = AutoFaker.Generate<float>()
+                };
+
+                var pricelist = new PricelistDTO()
+                {
+                    Id = id,
+                    MealId = id, 
+                    Price = AutoFaker.Generate<float>()
+                };
+
+                await mealService.AddAsync(meal);
+                await pricelistService.AddAsync(pricelist);
+                var result = pricelistService.GetPriceByMealId(id);
+
+                result.Should().BeEquivalentTo(pricelist);
+
+                await context.Database.EnsureDeletedAsync();
+            }
+        }
+
+        public class IngredientServiceTest : ServiceTests
+        {
+            [Test]
+            public async Task GetIngredientById_Meal_GetsCorrectIngredient()
+            {
+                int id = AutoFaker.Generate<int>();
+                var meal = new MealDTO()
+                {
+                    Id = id,
+                    Name = AutoFaker.Generate<string>(),
+                    Description = AutoFaker.Generate<string>(),
+                    Weight = AutoFaker.Generate<float>()
+                };
+
+                var ingredient = new IngredientDTO()
+                {
+                    Id = id,
+                    MealId = id,
+                    Name = AutoFaker.Generate<string>(),
+                    Weight = AutoFaker.Generate<float>()
+                };
+
+                await mealService.AddAsync(meal);
+                await ingredientService.AddAsync(ingredient);
+                var result = ingredientService.GetIngredientById(id);
+
+                result.Should().BeEquivalentTo(ingredient);
+
+                await context.Database.EnsureDeletedAsync();
+            }
+
+            [Test]
+            public async Task GetIngredientsOfTheMeal_Meal_GetsCorrectIngredients()
+            {
+                int id = AutoFaker.Generate<int>();
+                var meal = new MealDTO()
+                {
+                    Id = id,
+                    Name = AutoFaker.Generate<string>(),
+                    Description = AutoFaker.Generate<string>(),
+                    Weight = AutoFaker.Generate<float>()
+                };
+
+                var ingredient = new IngredientDTO()
+                {
+                    Id = id,
+                    MealId = id,
+                    Name = AutoFaker.Generate<string>(),
+                    Weight = AutoFaker.Generate<float>()
+                };
+
+                await mealService.AddAsync(meal);
+                await ingredientService.AddAsync(ingredient);
+                var result = ingredientService.GetIngredientsOfTheMeal(id).ToList();
+
+                result[0].Should().BeEquivalentTo(ingredient);
+
+                await context.Database.EnsureDeletedAsync();
             }
         }
     }

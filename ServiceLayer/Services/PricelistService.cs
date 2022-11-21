@@ -33,5 +33,41 @@ namespace ServiceLayer.Services
 
             return price;
         }
+
+        public Task<PricelistDTO> AddAsync(PricelistDTO entity)
+        {
+            return Task.Run(() =>
+            {
+                Pricelist newEntity = mapper.Map<PricelistDTO, Pricelist>(entity);
+                unitOfWork.PricelistRepository.Create(newEntity);
+                unitOfWork.PricelistRepository.SaveChanges();
+                return mapper.Map<Pricelist, PricelistDTO>(newEntity);
+            });
+        }
+
+        public Task<PricelistDTO> DeleteAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task UpdateAsync(PricelistDTO entity)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<PricelistDTO>> GetAllAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public PricelistDTO Get(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<PricelistDTO> GetAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

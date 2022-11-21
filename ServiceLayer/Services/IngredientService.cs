@@ -44,5 +44,41 @@ namespace ServiceLayer.Services
 
             return ingredients;
         }
+
+        public Task<IngredientDTO> AddAsync(IngredientDTO entity)
+        {
+            return Task.Run(() =>
+            {
+                Ingredient newEntity = mapper.Map<IngredientDTO, Ingredient>(entity);
+                unitOfWork.IngredientRepository.Create(newEntity);
+                unitOfWork.IngredientRepository.SaveChanges();
+                return mapper.Map<Ingredient, IngredientDTO>(newEntity);
+            });
+        }
+
+        public Task<IngredientDTO> DeleteAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task UpdateAsync(IngredientDTO entity)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<IngredientDTO>> GetAllAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public IngredientDTO Get(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IngredientDTO> GetAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

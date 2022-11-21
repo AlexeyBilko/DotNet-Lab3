@@ -44,7 +44,7 @@ namespace ServiceLayer.Services
 
             return meal;
         }
-
+        //TODO: Rewrite 
         public Task<MealDTO> AddAsync(MealDTO entity)
         {
             return Task.Run(() =>
@@ -56,6 +56,7 @@ namespace ServiceLayer.Services
             });
         }
 
+        // interface sugregastion SOL[I]D 
         public Task<MealDTO> DeleteAsync(int id)
         {
             throw new NotImplementedException();
