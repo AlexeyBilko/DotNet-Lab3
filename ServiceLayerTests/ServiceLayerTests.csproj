@@ -26,10 +26,6 @@
     <None Remove="Integration Tests\" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Unit Tests\" />
     <Folder Include="Integration Tests\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Unit Tests\IngredientServiceTests.cs" />
   </ItemGroup>
 </Project>

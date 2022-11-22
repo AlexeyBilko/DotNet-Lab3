@@ -16,7 +16,7 @@ namespace ServiceLayerTests.UnitTests
         [SetUp]
         public void IngredientServiceSetup()
         {
-            unitOfWorkMock = new Mock<IUnitOfWork>("OrderService");
+            unitOfWorkMock = new Mock<IUnitOfWork>();
             orderService = new OrderService(unitOfWorkMock.Object);
 
             MapperConfiguration configuration = new MapperConfiguration(opt =>
@@ -33,7 +33,7 @@ namespace ServiceLayerTests.UnitTests
         protected OrderService orderService;
 
         [Test]
-        public async void GetAsync_Order_GetsCorrectItem()
+        public async Task GetAsync_Order_GetsCorrectItem()
         {
             var order = new Order()
             {
@@ -50,7 +50,7 @@ namespace ServiceLayerTests.UnitTests
         }
 
         [Test]
-        public async void GetAllAsync_Orders_GetsCorrectItems()
+        public async Task GetAllAsync_Orders_GetsCorrectItems()
         {
             var orders = new List<Order>();
             orders.Add(new Order()
@@ -67,7 +67,7 @@ namespace ServiceLayerTests.UnitTests
             });
 
 
-            unitOfWorkMock.Setup(esc => esc.OrderRepository.GetAllAsync().Result.ToList()).Returns(orders);
+            unitOfWorkMock.Setup(esc => esc.OrderRepository.GetAllAsync().Result).Returns(orders);
 
             List<OrderDTO> actual = (await orderService.GetAllAsync()).ToList();
 
@@ -75,7 +75,7 @@ namespace ServiceLayerTests.UnitTests
         }
 
         [Test]
-        public async void AddAsync_Order_ItemAdded()
+        public async Task AddAsync_Order_ItemAdded()
         {
             var order = new Order()
             {
@@ -93,7 +93,7 @@ namespace ServiceLayerTests.UnitTests
         }
 
         [Test]
-        public async void UpdateAsync_Order_ItemUpdated()
+        public async Task UpdateAsync_Order_ItemUpdated()
         {
             var order = new Order()
             {
@@ -111,7 +111,7 @@ namespace ServiceLayerTests.UnitTests
         }
 
         [Test]
-        public async void DeleteAsync_Order_ItemDeleted()
+        public async Task DeleteAsync_Order_ItemDeleted()
         {
             var order = new Order()
             {
@@ -137,7 +137,7 @@ namespace ServiceLayerTests.UnitTests
 
             var order = new Order()
             {
-                Id = 1,
+                Id = 0,
                 TableNumber = tableNumber,
                 OrderedTime = createdTime
             };
@@ -154,24 +154,10 @@ namespace ServiceLayerTests.UnitTests
         {
             int orderId = 1;
             int mealId = 1;
-            var order = new Order()
-            {
-                Id = orderId,
-                TableNumber = AutoFaker.Generate<int>(),
-                OrderedTime = DateTime.Now
-            };
-
-            var meal = new Meal()
-            {
-                Id = mealId,
-                Name = AutoFaker.Generate<string>(),
-                Description = AutoFaker.Generate<string>(),
-                Weight = AutoFaker.Generate<float>()
-            };
 
             var mealInOrder = new MealInOrder()
             {
-                Id = 1,
+                Id = 0,
                 MealId = mealId,
                 OrderId = orderId
             };
@@ -180,7 +166,13 @@ namespace ServiceLayerTests.UnitTests
 
             MealInOrder actual = orderService.AddMealToOrder(orderId, mealId);
 
-            actual.Should().BeEquivalentTo(mapper.Map<Order, OrderDTO>(order));
+            MapperConfiguration configuration = new MapperConfiguration(opt =>
+            {
+                opt.CreateMap<MealInOrder, MealInOrderDTO>();
+            });
+            mapper = new Mapper(configuration);
+
+            actual.Should().BeEquivalentTo(mapper.Map<MealInOrder, MealInOrderDTO>(mealInOrder));
         }
     }
 }

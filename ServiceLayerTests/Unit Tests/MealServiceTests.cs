@@ -3,6 +3,7 @@ using AutoBogus;
 using AutoMapper;
 using DomainLayer.Models;
 using FluentAssertions;
+using Microsoft.EntityFrameworkCore;
 using Moq;
 using NUnit.Framework;
 using RepositoryLayer.UnitOfWork;
@@ -16,7 +17,7 @@ namespace ServiceLayerTests.UnitTests
         [SetUp]
         public void IngredientServiceSetup()
         {
-            unitOfWorkMock = new Mock<IUnitOfWork>("MealService");
+            unitOfWorkMock = new Mock<IUnitOfWork>();
             mealService = new MealService(unitOfWorkMock.Object);
 
             MapperConfiguration configuration = new MapperConfiguration(opt =>
@@ -33,7 +34,7 @@ namespace ServiceLayerTests.UnitTests
         protected MealService mealService;
 
         [Test]
-        public async void GetAsync_Meal_GetsCorrectItem()
+        public async Task GetAsync_Meal_GetsCorrectItem()
         {
             var meal = new Meal()
             {
@@ -51,7 +52,7 @@ namespace ServiceLayerTests.UnitTests
         }
 
         [Test]
-        public async void GetAllAsync_Meals_GetsCorrectItems()
+        public async Task GetAllAsync_Meals_GetsCorrectItems()
         {
             var meals = new List<Meal>();
             meals.Add(new Meal()
@@ -70,7 +71,7 @@ namespace ServiceLayerTests.UnitTests
             });
 
 
-            unitOfWorkMock.Setup(esc => esc.MealRepository.GetAllAsync().Result.ToList()).Returns(meals);
+            unitOfWorkMock.Setup(esc => esc.MealRepository.GetAllAsync().Result).Returns(meals);
 
             List<MealDTO> actual = (await mealService.GetAllAsync()).ToList();
 
@@ -78,7 +79,7 @@ namespace ServiceLayerTests.UnitTests
         }
 
         [Test]
-        public async void AddAsync_Meal_ItemAdded()
+        public async Task AddAsync_Meal_ItemAdded()
         {
             var meal = new Meal()
             {
@@ -97,7 +98,7 @@ namespace ServiceLayerTests.UnitTests
         }
 
         [Test]
-        public async void UpdateAsync_Meal_ItemUpdated()
+        public async Task UpdateAsync_Meal_ItemUpdated()
         {
             var meal = new Meal()
             {
@@ -116,7 +117,7 @@ namespace ServiceLayerTests.UnitTests
         }
 
         [Test]
-        public async void DeleteAsync_Meal_ItemDeleted()
+        public async Task DeleteAsync_Meal_ItemDeleted()
         {
             var meal = new Meal()
             {
@@ -156,7 +157,7 @@ namespace ServiceLayerTests.UnitTests
             });
 
 
-            unitOfWorkMock.Setup(esc => esc.MealRepository.GetMealsByName(mealName).ToList()).Returns(meals);
+            unitOfWorkMock.Setup(esc => esc.MealRepository.GetMealsByName(mealName)).Returns(meals.AsQueryable());
 
             List<MealDTO> actual = mealService.GetMealsByName(mealName).ToList();
 

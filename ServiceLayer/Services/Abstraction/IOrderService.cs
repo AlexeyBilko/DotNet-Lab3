@@ -11,7 +11,7 @@ namespace ServiceLayer.Services
     public interface IOrderService : IService<Order, OrderDTO, int>
     {
         public OrderDTO CreateOrder(int tableNumber, DateTime createdTime);
-        public void AddMealToOrder(int orderId, int mealId);
+        public MealInOrder AddMealToOrder(int orderId, int mealId);
         public void RemoveMealFromOrder(int orderId, int mealId);
         public IEnumerable<MealDTO> GetMealsInOder(int orderId);
     }

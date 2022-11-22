@@ -16,7 +16,7 @@ namespace ServiceLayerTests.UnitTests
         [SetUp]
         public void IngredientServiceSetup()
         {
-            unitOfWorkMock = new Mock<IUnitOfWork>("PricelistService");
+            unitOfWorkMock = new Mock<IUnitOfWork>();
             pricelistService = new PricelistService(unitOfWorkMock.Object);
 
             MapperConfiguration configuration = new MapperConfiguration(opt =>
@@ -33,7 +33,7 @@ namespace ServiceLayerTests.UnitTests
         protected PricelistService pricelistService;
 
         [Test]
-        public async void GetAsync_Order_GetsCorrectItem()
+        public async Task GetAsync_Order_GetsCorrectItem()
         {
 
             var pricelist = new Pricelist()
@@ -51,7 +51,7 @@ namespace ServiceLayerTests.UnitTests
         }
 
         [Test]
-        public async void GetAllAsync_Orders_GetsCorrectItems()
+        public async Task GetAllAsync_Orders_GetsCorrectItems()
         {
             var pricelists = new List<Pricelist>();
             pricelists.Add(new Pricelist()
@@ -68,7 +68,7 @@ namespace ServiceLayerTests.UnitTests
             });
 
 
-            unitOfWorkMock.Setup(esc => esc.PricelistRepository.GetAllAsync().Result.ToList()).Returns(pricelists);
+            unitOfWorkMock.Setup(esc => esc.PricelistRepository.GetAllAsync().Result).Returns(pricelists);
 
             List<PricelistDTO> actual = (await pricelistService.GetAllAsync()).ToList();
 
@@ -76,7 +76,7 @@ namespace ServiceLayerTests.UnitTests
         }
 
         [Test]
-        public async void AddAsync_Order_ItemAdded()
+        public async Task AddAsync_Order_ItemAdded()
         {
             var pricelist = new Pricelist()
             {
@@ -88,13 +88,13 @@ namespace ServiceLayerTests.UnitTests
 
             unitOfWorkMock.Setup(esc => esc.PricelistRepository.CreateAsync(pricelist).Result).Returns(pricelist);
 
-            PricelistDTO actual = await pricelistService.AddAsync(mapper.Map<Pricelist, PricelistDTO>(pricelist));
+            PricelistDTO actual =  await pricelistService.AddAsync(mapper.Map<Pricelist, PricelistDTO>(pricelist));
 
             actual.Should().BeEquivalentTo(mapper.Map<Pricelist, PricelistDTO>(pricelist));
         }
 
         [Test]
-        public async void UpdateAsync_Order_ItemUpdated()
+        public async Task UpdateAsync_Order_ItemUpdated()
         {
             var pricelist = new Pricelist()
             {
@@ -112,7 +112,7 @@ namespace ServiceLayerTests.UnitTests
         }
 
         [Test]
-        public async void DeleteAsync_Order_ItemDeleted()
+        public async Task DeleteAsync_Order_ItemDeleted()
         {
             var pricelist = new Pricelist()
             {

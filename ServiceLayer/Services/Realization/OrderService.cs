@@ -44,23 +44,18 @@ namespace ServiceLayer.Services
 
         public MealInOrder AddMealToOrder(int orderId, int mealId)
         {
-            if (unitOfWork.MealRepository.Get(mealId) != null||  
-                unitOfWork.OrderRepository.Get(orderId) != null)
+            var mealToAdd = new MealInOrder()
             {
-                var mealToAdd = new MealInOrder()
-                {
-                    MealId = mealId,
-                    OrderId = orderId
-                };
+                MealId = mealId,
+                OrderId = orderId
+            };
 
-                unitOfWork
-                    .MealInOrderRepository
-                    .CreateAsync(mealToAdd);
-                unitOfWork.SaveChanges();
+            unitOfWork
+                .MealInOrderRepository
+                .CreateAsync(mealToAdd);
+            unitOfWork.SaveChanges();
 
-                return mealToAdd;
-            }
-            throw new ArgumentException("not found");
+            return mealToAdd;
         }
 
         public async void RemoveMealFromOrder(int orderId, int mealId)

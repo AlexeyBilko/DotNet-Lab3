@@ -3,20 +3,21 @@ using AutoBogus;
 using AutoMapper;
 using DomainLayer.Models;
 using FluentAssertions;
+using Microsoft.EntityFrameworkCore;
 using Moq;
 using NUnit.Framework;
 using RepositoryLayer.UnitOfWork;
 using ServiceLayer.DTO;
 using ServiceLayer.Services;
 
-namespace ServiceLayerTests.UnitTests
+namespace ServiceLayerTests.Unit_Tests
 {
-    public class IngredientServiceTests
-	{
+    public class IngedientServiceTests
+    {
         [SetUp]
         public void IngredientServiceSetup()
         {
-            unitOfWorkMock = new Mock<IUnitOfWork>("IngredientService");
+            unitOfWorkMock = new Mock<IUnitOfWork>();
             ingredientService = new IngredientService(unitOfWorkMock.Object);
 
             MapperConfiguration configuration = new MapperConfiguration(opt =>
@@ -33,7 +34,7 @@ namespace ServiceLayerTests.UnitTests
         protected IngredientService ingredientService;
 
         [Test]
-        public async void GetAsync_Ingredient_GetsCorrectItem()
+        public async Task GetAsync_Ingredient_GetsCorrectItem()
         {
             var ingredient = new Ingredient()
             {
@@ -51,7 +52,7 @@ namespace ServiceLayerTests.UnitTests
         }
 
         [Test]
-        public async void GetAllAsync_Ingredients_GetsCorrectItems()
+        public async Task GetAllAsync_Ingredients_GetsCorrectItems()
         {
             var ingredients = new List<Ingredient>();
             ingredients.Add(new Ingredient()
@@ -70,7 +71,7 @@ namespace ServiceLayerTests.UnitTests
             });
 
 
-            unitOfWorkMock.Setup(esc => esc.IngredientRepository.GetAllAsync().Result.ToList()).Returns(ingredients);
+            unitOfWorkMock.Setup(esc => esc.IngredientRepository.GetAllAsync().Result).Returns(ingredients);
 
             List<IngredientDTO> actual = (await ingredientService.GetAllAsync()).ToList();
 
@@ -78,7 +79,7 @@ namespace ServiceLayerTests.UnitTests
         }
 
         [Test]
-        public async void AddAsync_Ingredient_ItemAdded()
+        public async Task AddAsync_Ingredient_ItemAdded()
         {
             var ingredient = new Ingredient()
             {
@@ -97,7 +98,7 @@ namespace ServiceLayerTests.UnitTests
         }
 
         [Test]
-        public async void UpdateAsync_Ingredient_ItemUpdated()
+        public async Task UpdateAsync_Ingredient_ItemUpdated()
         {
             var ingredient = new Ingredient()
             {
@@ -116,7 +117,7 @@ namespace ServiceLayerTests.UnitTests
         }
 
         [Test]
-        public async void DeleteAsync_Ingredient_ItemDeleted()
+        public async Task DeleteAsync_Ingredient_ItemDeleted()
         {
             var ingredient = new Ingredient()
             {
@@ -156,7 +157,7 @@ namespace ServiceLayerTests.UnitTests
             });
 
 
-            unitOfWorkMock.Setup(esc => esc.IngredientRepository.GetIngredientInMeal(mealId).ToList()).Returns(ingredients);
+            unitOfWorkMock.Setup(esc => esc.IngredientRepository.GetIngredientInMeal(mealId)).Returns(ingredients);
 
             List<IngredientDTO> actual = ingredientService.GetIngredientsOfTheMeal(mealId).ToList();
 
@@ -164,4 +165,3 @@ namespace ServiceLayerTests.UnitTests
         }
     }
 }
-

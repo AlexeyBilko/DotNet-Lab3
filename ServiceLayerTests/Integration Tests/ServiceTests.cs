@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutoBogus;
-using DomainLayer.Models;
+﻿using AutoBogus;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Moq;
@@ -15,7 +9,7 @@ using RepositoryLayer.UnitOfWork;
 using ServiceLayer.DTO;
 using ServiceLayer.Services;
 
-namespace ServiceLayerTests
+namespace ServiceLayerTests.Integration_Tests
 {
     public class ServiceTests
     {
@@ -46,10 +40,10 @@ namespace ServiceLayerTests
         private PricelistService pricelistService;
         private IngredientService ingredientService;
 
-        public class MealServiceTests : ServiceTests
+        public class IntegrationMealServiceTests : ServiceTests
         {
             [Test]
-            public void GetMealById_Meal_ReturnsElement()
+            public async Task GetMealById_Meal_ReturnsElement()
             {
                 var meal = new MealDTO()
                 {
@@ -59,9 +53,9 @@ namespace ServiceLayerTests
                     Weight = AutoFaker.Generate<float>()
                 };
 
-                mealService.AddAsync(meal);
+                await mealService.AddAsync(meal);
 
-                var actual = mealService.GetAsync(1);
+                var actual = await mealService.GetAsync(1);
 
                 actual.Should().BeEquivalentTo(meal);
 
@@ -99,10 +93,10 @@ namespace ServiceLayerTests
             }
         }
 
-        public class OrderServiceTests : ServiceTests
+        public class IntegrationOrderServiceTests : ServiceTests
         {
             [Test]
-            public void CreateOrder_Order_NewElementAdded()
+            public async Task CreateOrder_Order_NewElementAdded()
             {
                 int id = 1;
                 var order = new OrderDTO()
@@ -114,7 +108,7 @@ namespace ServiceLayerTests
 
                 orderService.CreateOrder(order.TableNumber, order.OrderedTime);
 
-                var actual = orderService.GetAsync(id);
+                var actual = await orderService.GetAsync(id);
 
                 actual.Should().BeEquivalentTo(order);
 
@@ -182,7 +176,7 @@ namespace ServiceLayerTests
             }
         }
 
-        public class PricelistServiceTest : ServiceTests
+        public class IntegrationPricelistServiceTest : ServiceTests
         {
             [Test]
             public async Task GetPriceByMeal_Meal_GetsCorrectPrice()
@@ -213,7 +207,7 @@ namespace ServiceLayerTests
             }
         }
 
-        public class IngredientServiceTest : ServiceTests
+        public class IntegrationIngredientServiceTest : ServiceTests
         {
             [Test]
             public async Task GetIngredientById_Meal_GetsCorrectIngredient()
@@ -237,7 +231,7 @@ namespace ServiceLayerTests
 
                 await mealService.AddAsync(meal);
                 await ingredientService.AddAsync(ingredient);
-                var result = ingredientService.GetAsync(id);
+                var result = await ingredientService.GetAsync(id);
 
                 result.Should().BeEquivalentTo(ingredient);
 
