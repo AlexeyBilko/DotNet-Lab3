@@ -25,7 +25,4 @@
     <None Remove="Unit Tests\IngredientService.Tests" />
     <None Remove="Integration Tests\" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Integration Tests\" />
-  </ItemGroup>
 </Project>
