@@ -23,9 +23,11 @@
   <ItemGroup>
     <None Remove="Unit Tests\" />
     <None Remove="Unit Tests\IngredientService.Tests" />
+    <None Remove="Integration Tests\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Unit Tests\" />
+    <Folder Include="Integration Tests\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Unit Tests\IngredientServiceTests.cs" />

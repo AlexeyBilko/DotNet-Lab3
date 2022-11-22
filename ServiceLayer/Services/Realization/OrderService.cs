@@ -42,7 +42,7 @@ namespace ServiceLayer.Services
             return order;
         }
 
-        public void AddMealToOrder(int orderId, int mealId)
+        public MealInOrder AddMealToOrder(int orderId, int mealId)
         {
             if (unitOfWork.MealRepository.Get(mealId) != null||  
                 unitOfWork.OrderRepository.Get(orderId) != null)
@@ -57,7 +57,10 @@ namespace ServiceLayer.Services
                     .MealInOrderRepository
                     .CreateAsync(mealToAdd);
                 unitOfWork.SaveChanges();
+
+                return mealToAdd;
             }
+            throw new ArgumentException("not found");
         }
 
         public async void RemoveMealFromOrder(int orderId, int mealId)
