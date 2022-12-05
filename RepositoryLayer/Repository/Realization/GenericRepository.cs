@@ -34,6 +34,7 @@ namespace RepositoryLayer.Repository
             {
                 throw new ArgumentNullException(nameof(entity));
             }
+
             table.Remove(entity);
             await context.SaveChangesAsync();
             return entity;
