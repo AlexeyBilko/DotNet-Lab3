@@ -1,11 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Globalization;
+using Microsoft.AspNetCore.Mvc;
 using RepositoryLayer.UnitOfWork;
+using Restaurant.Models;
 using ServiceLayer.DTO;
 using ServiceLayer.Services;
 
 namespace Restaurant.Controllers
 {
-    [Route("meals/")]
     public class MealsController : Controller
     {
         private MealService mealService;
@@ -21,38 +22,52 @@ namespace Restaurant.Controllers
             return View(allMeals);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> AddNewMeal(MealDTO meal)
+        public async Task<IActionResult> Add()
         {
-            if (ModelState.IsValid)
-            {
-                var createdMeal = await mealService.AddAsync(meal);
-                return RedirectToAction("Index", "Home");
-            }
-
-            return View();
+            return View(new MealsViewModel());
         }
 
         [HttpPost]
-        public async Task<IActionResult> DeleteMeal(int id)
+        public async Task<IActionResult> AddNewMeal(MealsViewModel meal)
         {
-            var mealToDelete = await mealService.GetAsync(id);
+            if (ModelState.IsValid)
+            {
+                float weight = float.Parse(meal.Weight, CultureInfo.InvariantCulture.NumberFormat);
+                float price = float.Parse(meal.Price, CultureInfo.InvariantCulture.NumberFormat);
+                
+                var ingredients = new List<IngredientDTO>();
+                foreach (var item in meal.ingredients)
+                {
+                    ingredients.Add(new IngredientDTO()
+                    {
+                        Name = item,
+                        Weight = 100
+                    });
+                }
+
+                var mealDTO = new MealDTO
+                {
+                    Name = meal.Name,
+                    Description = meal.Description,
+                    Weight = weight,
+                    Price = price,
+                    Ingredients = ingredients
+                };
+                
+                var createdMeal = await mealService.AddAsync(mealDTO);
+                return RedirectToAction("Index", "Meals");
+            }
+
+            return RedirectToAction("Add", "Meals");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteMeal(int Id)
+        {
+            var mealToDelete = await mealService.GetAsync(Id);
             await mealService.DeleteAsync(mealToDelete);
 
             return RedirectToAction("Index", "Home");
-        }
-
-
-        [HttpPost]
-        public async Task<IActionResult> UpdateMeal(MealDTO meal)
-        {
-            if (ModelState.IsValid)
-            {
-                var updatedMeal = await mealService.UpdateAsync(meal);
-                return RedirectToAction("Index", "Home");
-            }
-
-            return View();
         }
     }
 }

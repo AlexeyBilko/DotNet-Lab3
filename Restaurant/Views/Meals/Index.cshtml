@@ -1,0 +1,54 @@
+﻿@model IEnumerable<ServiceLayer.DTO.MealDTO>
+
+<head>
+    <link rel="stylesheet" href="css/site.css"/>
+</head>
+
+<div class="content">
+    <div class="container">
+        <h2 class="mb-5">Menu</h2>
+        <div class="table-responsive">
+            <table class="table table-striped custom-table">
+                <thead>
+                <tr>
+                    <th scope="col">Meal Name</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Weight</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Ingredients</th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (var meal in Model)
+                {
+                    <tr scope="row">
+                        <td>@meal.Name</td>
+                        <td>@meal.Description</td>
+                        <td>@meal.Weight.ToString()</td>
+                        <td>@meal.Price.ToString()</td>
+                        <td>
+                            <div id="ingredients">
+                                <ul>
+                                    @foreach (var item in meal.Ingredients)
+                                    {
+                                        <li>@item.Name (@item.Weight g.)</li>
+                                    }
+                                </ul>
+                            </div>
+                        </td>
+                        <td>
+                            <form method="post" asp-action="DeleteMeal" asp-controller="Meals">
+                                <input value="@meal.Id" type="hidden" name="Id">
+                                <input type="submit" class="border-0 bg-transparent" value="Delete" class="more" data-bs-dismiss="modal">
+                            </form>
+                        </td>
+
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

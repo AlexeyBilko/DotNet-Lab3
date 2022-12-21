@@ -12,5 +12,8 @@ namespace ServiceLayer.DTO
         public string Name { get; set; }
         public string Description { get; set; }
         public float Weight { get; set; }
+
+        public List<IngredientDTO> Ingredients { get; set; }
+        public float Price { get; set; }
     }
 }

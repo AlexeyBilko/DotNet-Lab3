@@ -20,8 +20,8 @@ namespace ServiceLayer.Services
             this.unitOfWork = unitOfWork;
             MapperConfiguration configuration = new MapperConfiguration(opt =>
             {
-                opt.CreateMap<Meal, MealDTO>();
-                opt.CreateMap<MealDTO, Meal>();
+                opt.CreateMap<Ingredient, IngredientDTO>();
+                opt.CreateMap<IngredientDTO, Ingredient>();
             });
             mapper = new Mapper(configuration);
         }
@@ -30,7 +30,7 @@ namespace ServiceLayer.Services
         {
             var meals = unitOfWork.MealRepository
                 .GetMealsByName(mealName)
-                .Select(meal => mapper.Map<Meal, MealDTO>(meal))
+                .Select(meal => MealToDTO(meal))
                 .ToList();
 
             return meals;
@@ -38,9 +38,19 @@ namespace ServiceLayer.Services
         
         public async Task<MealDTO> AddAsync(MealDTO entity)
         {
-            var mappedEntity = mapper.Map<MealDTO, Meal>(entity);
+            //var mappedEntity = mapper.Map<MealDTO, Meal>(entity);
+            var mappedEntity = MealDTOToMeal(entity);
 
             await unitOfWork.MealRepository.CreateAsync(mappedEntity);
+            unitOfWork.SaveChanges();
+            await unitOfWork.PricelistRepository.CreateAsync(new Pricelist()
+                { MealId = mappedEntity.Id, Price = entity.Price });
+            unitOfWork.SaveChanges();
+            foreach (var ingredient in entity.Ingredients)
+            {
+                ingredient.MealId = mappedEntity.Id;
+                await unitOfWork.IngredientRepository.CreateAsync(mapper.Map<IngredientDTO, Ingredient>(ingredient));
+            }
             unitOfWork.SaveChanges();
 
             entity.Id = mappedEntity.Id;
@@ -51,7 +61,8 @@ namespace ServiceLayer.Services
 
         public async Task<MealDTO> DeleteAsync(MealDTO entity)
         {
-            var mappedEntity = mapper.Map<MealDTO, Meal>(entity);
+            //var mappedEntity = mapper.Map<MealDTO, Meal>(entity);
+            var mappedEntity = MealDTOToMeal(entity);
 
             await unitOfWork.MealRepository.DeleteAsync(mappedEntity);
             unitOfWork.SaveChanges();
@@ -61,8 +72,8 @@ namespace ServiceLayer.Services
 
         public async Task<MealDTO> UpdateAsync(MealDTO entity)
         {
-            var mappedEntity = mapper.Map<MealDTO, Meal>(entity);
-
+            //var mappedEntity = mapper.Map<MealDTO, Meal>(entity);
+            var mappedEntity = MealDTOToMeal(entity);
             await unitOfWork.MealRepository.UpdateAsync(mappedEntity);
             unitOfWork.SaveChanges();
 
@@ -71,17 +82,47 @@ namespace ServiceLayer.Services
 
         public async Task<IEnumerable<MealDTO>> GetAllAsync()
         {
-            return (await unitOfWork.MealRepository.GetAllAsync()).Select(mapper.Map<Meal, MealDTO>); 
+            return (await unitOfWork.MealRepository.GetAllAsync()).Select(MealToDTO); 
         }
 
         public async Task<MealDTO> GetAsync(int id)
         {
-            var order = await unitOfWork.MealRepository.Get(id);
-            if (order != null)
+            var meal = await unitOfWork.MealRepository.Get(id);
+            if (meal != null)
             {
-                return mapper.Map<Meal, MealDTO>(order);
+                //return mapper.Map<Meal, MealDTO>(order);
+                return MealToDTO(meal);
             }
             throw new ArgumentException("not found");
+        }
+
+        public MealDTO MealToDTO(Meal toConvert)
+        {
+            var price = unitOfWork.PricelistRepository.GetPriceByMeal(toConvert.Id).Price;
+            var ingredients = unitOfWork.IngredientRepository
+                .GetIngredientInMeal(toConvert.Id)
+                .Select(mapper.Map<Ingredient, IngredientDTO>)
+                .ToList();
+            return new MealDTO
+            {
+                Id = toConvert.Id,
+                Name = toConvert.Name,
+                Description = toConvert.Description,
+                Weight = toConvert.Weight,
+                Price = price,
+                Ingredients = ingredients
+            };
+        }
+
+        public Meal MealDTOToMeal(MealDTO toConvert)
+        {
+            return new Meal
+            {
+                Id = toConvert.Id,
+                Name = toConvert.Name,
+                Description = toConvert.Description,
+                Weight = toConvert.Weight
+            };
         }
     }
 }
