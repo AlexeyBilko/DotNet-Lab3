@@ -1,5 +1,6 @@
-﻿@model MealsViewModel
-@{ Model.ingredients = new List<string>(); }
+﻿@using ServiceLayer.DTO
+@model OrdersViewModel
+@{ Model.meals = new List<MealDTO>(); }
 
 <head>
     <link rel="stylesheet" href="css/form.css"/>
@@ -7,26 +8,24 @@
 
 <div class="container" class="form-group">
     <form method="post" asp-action="AddNewMeal" asp-controller="Meals" id="addnewmeal" enctype="multipart/form-data" class="add-form">
-        <input asp-for="Name" type="text" id="name" placeholder="Enter Meal Name">
-        <input asp-for="Description" type="text" id="description" placeholder="Enter Meal Description">
-        <input asp-for="Weight" type="number" step="0.01" id="weight" placeholder="Weight">
-        <input asp-for="Price" type="number" step="0.01" id="price" placeholder="Price">
+        <input asp-for="TableNumber" type="number" id="tablenumber" placeholder="Table Number" min="1" max="25">
+        <input asp-for="OrderedTime" type="datetime" value="@DateTime.Now" placeholder="Ordered Time">
 
         <div id="strings">
-            @for (int i = 0; i < Model.ingredients.Count; i++)
+            @for (int i = 0; i < Model.meals.Count; i++)
             {
                 <div class="editor-label">
-                    @Html.TextBoxFor(m => m.ingredients[i])
+                    <select asp-for="meals[i]" asp-items="@ViewBag.data"></select>
                 </div>
             }
         </div>
 
         <div id="newstring" style="display:none;">
-            <input type="text" name="ingredients[#]" placeholder="New Ingredient"/>
+            <select name="meals[#]" asp-items="@ViewBag.data"></select>
         </div>
         <button type="button" id="addstring">Add Ingredient</button>
 
-        <input type="submit" value="Add Meal" class="">
+        <input type="submit" value="Create Order" class="">
     </form>
 </div>
 

@@ -95,11 +95,12 @@ h2 {
             letter-spacing: .2rem;
         }
 
-    .custom-table tbody tr {
-        -webkit-transition: .3s all ease;
-        -o-transition: .3s all ease;
-        transition: .3s all ease;
-    }
+
+.custom-table tbody tr {
+    -webkit-transition: .3s all ease;
+    -o-transition: .3s all ease;
+    transition: .3s all ease;
+}
 
         .custom-table tbody tr:hover td, .custom-table tbody tr:focus td {
             color: #fff;
@@ -127,3 +128,26 @@ h2 {
         .custom-table .box td, .custom-table .box th {
             border: none !important;
         }
+
+.main-block {
+    margin: 0 auto;
+    text-align: center;
+    display: block;
+    justify-content: center;
+    align-items: center;
+    margin-top: 200px;
+}
+
+.main-block a {
+    display: block;
+}
+
+.add-form {
+    margin: 0 auto;
+    display: block;
+    margin-top: 150px;
+}
+
+input {
+    display: block;
+}

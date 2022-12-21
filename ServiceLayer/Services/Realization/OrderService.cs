@@ -58,6 +58,26 @@ namespace ServiceLayer.Services
             return mealToAdd;
         }
 
+        public bool AddMealsToOrder(int orderId, List<MealDTO> meals)
+        {
+            foreach (var meal in meals)
+            {
+                var mealToAdd = new MealInOrder()
+                {
+                    MealId = meal.Id,
+                    OrderId = orderId
+                };
+
+                unitOfWork
+                    .MealInOrderRepository
+                    .CreateAsync(mealToAdd);
+            }
+
+            unitOfWork.SaveChanges();
+
+            return true;
+        }
+
         public async void RemoveMealFromOrder(int orderId, int mealId)
         {
             Meal? mealToRemove = await unitOfWork.MealRepository.Get(mealId);
