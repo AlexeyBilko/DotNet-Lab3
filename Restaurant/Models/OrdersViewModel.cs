@@ -11,6 +11,7 @@ namespace Restaurant.Models
         [Required(ErrorMessage = "OrderedTime")]
         public DateTime OrderedTime { get; set; }
 
-        public List<MealDTO>? meals { get; set; }
+        //public List<MealDTO>? meals { get; set; }
+        public List<string>? meals { get; set; }
     }
 }

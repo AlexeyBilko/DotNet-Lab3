@@ -11,5 +11,6 @@ namespace RepositoryLayer.Repository
     {
         public IQueryable<Meal> GetMealsByName(string mealName);
         public IQueryable<Meal> GetMealsInOrder(int orderId);
+        public bool DeleteId(int mealId);
     }
 }

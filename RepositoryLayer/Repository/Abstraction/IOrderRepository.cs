@@ -10,5 +10,6 @@ namespace RepositoryLayer.Repository
     public interface IOrderRepository : IRepository<Order, int>
     {
         public IEnumerable<Order> GetOrdersByTable(int tableNumber);
+        public bool DeleteId(int orderId);
     }
 }

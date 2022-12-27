@@ -13,6 +13,6 @@ namespace ServiceLayer.Services
         public OrderDTO CreateOrder(int tableNumber, DateTime createdTime);
         public MealInOrder AddMealToOrder(int orderId, int mealId);
         public void RemoveMealFromOrder(int orderId, int mealId);
-        public IEnumerable<MealDTO> GetMealsInOder(int orderId);
+        public IEnumerable<Meal> GetMealsInOder(int orderId);
     }
 }

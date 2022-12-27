@@ -21,5 +21,15 @@ namespace RepositoryLayer.Repository
 
             return result;
         }
+
+        public bool DeleteId(int orderId)
+        {
+            var mealinorders = context.MealInOrders.Where(order => order.OrderId == orderId);
+            context.MealInOrders.RemoveRange(mealinorders);
+            var order = context.Orders.SingleOrDefault(x => x.Id == orderId);
+            context.Orders.Remove(order);
+            context.SaveChanges();
+            return true;
+        }
     }
 }

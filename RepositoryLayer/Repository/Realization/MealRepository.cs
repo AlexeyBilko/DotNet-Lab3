@@ -30,5 +30,13 @@ namespace RepositoryLayer.Repository
                     meal => meal.Id,
                     (mealInOrder, meal) => meal);
         }
+
+        public bool DeleteId(int mealId)
+        {
+            var meal = context.Meals.SingleOrDefault(x => x.Id == mealId);
+            context.Meals.Remove(meal);
+            context.SaveChanges();
+            return true;
+        }
     }
 }

@@ -67,7 +67,7 @@ namespace Restaurant.Controllers
             var mealToDelete = await mealService.GetAsync(Id);
             await mealService.DeleteAsync(mealToDelete);
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Meals");
         }
     }
 }

@@ -1,13 +1,14 @@
 ﻿@using ServiceLayer.DTO
 @model OrdersViewModel
-@{ Model.meals = new List<MealDTO>(); }
+@{ Model.meals = new List<string>(); }
 
 <head>
     <link rel="stylesheet" href="css/form.css"/>
 </head>
 
 <div class="container" class="form-group">
-    <form method="post" asp-action="AddNewMeal" asp-controller="Meals" id="addnewmeal" enctype="multipart/form-data" class="add-form">
+    <a class="mb-5" href="~/Orders/Index">Back</a>
+    <form method="post" asp-action="AddNewOrder" asp-controller="Orders" id="addnewmeal" enctype="multipart/form-data" class="add-form">
         <input asp-for="TableNumber" type="number" id="tablenumber" placeholder="Table Number" min="1" max="25">
         <input asp-for="OrderedTime" type="datetime" value="@DateTime.Now" placeholder="Ordered Time">
 
@@ -15,7 +16,8 @@
             @for (int i = 0; i < Model.meals.Count; i++)
             {
                 <div class="editor-label">
-                    <select asp-for="meals[i]" asp-items="@ViewBag.data"></select>
+                    @Html.GetEnumSelectList(@ViewBag.data)
+                    <select name="meals[i]" asp-items="@ViewBag.data"></select>
                 </div>
             }
         </div>
@@ -23,7 +25,7 @@
         <div id="newstring" style="display:none;">
             <select name="meals[#]" asp-items="@ViewBag.data"></select>
         </div>
-        <button type="button" id="addstring">Add Ingredient</button>
+        <button type="button" id="addstring">Add Meal</button>
 
         <input type="submit" value="Create Order" class="">
     </form>
@@ -34,7 +36,7 @@
     <script type="text/javascript">
         var container = $('#strings');
         $('#addstring').click(function() {
-          var index = container.children('input').length;
+          var index = container.children('select').length;
           var clone = $('#newstring').clone();
           clone.html($(clone).html().replace(/\[#\]/g, '[' + index + ']'));
           container.append(clone.html());

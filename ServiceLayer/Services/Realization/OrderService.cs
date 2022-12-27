@@ -53,22 +53,24 @@ namespace ServiceLayer.Services
             unitOfWork
                 .MealInOrderRepository
                 .CreateAsync(mealToAdd);
+
             unitOfWork.SaveChanges();
 
             return mealToAdd;
         }
 
-        public bool AddMealsToOrder(int orderId, List<MealDTO> meals)
+        public async Task<bool> AddMealsToOrder(int orderId, List<string> meals)
         {
             foreach (var meal in meals)
             {
+                var _mealId = unitOfWork.MealRepository.GetMealsByName(meal).First().Id;
                 var mealToAdd = new MealInOrder()
                 {
-                    MealId = meal.Id,
+                    MealId = _mealId,
                     OrderId = orderId
                 };
 
-                unitOfWork
+                await unitOfWork
                     .MealInOrderRepository
                     .CreateAsync(mealToAdd);
             }
@@ -88,13 +90,12 @@ namespace ServiceLayer.Services
             }
         }
 
-        public IEnumerable<MealDTO> GetMealsInOder(int orderId)
+        public IEnumerable<Meal> GetMealsInOder(int orderId)
         {
             var meals = unitOfWork
                 .MealRepository
-                .GetMealsInOrder(orderId)
-                .Select(meal => mapper.Map<Meal, MealDTO>(meal));
-
+                .GetMealsInOrder(orderId);
+            
             return meals;
         }
 
@@ -114,8 +115,14 @@ namespace ServiceLayer.Services
         public async Task<OrderDTO> DeleteAsync(OrderDTO entity)
         {
             var mappedEntity = mapper.Map<OrderDTO, Order>(entity);
+            var mealsInOrders = unitOfWork.MealInOrderRepository.GetAllQueryable().Where(x => x.OrderId == entity.Id).ToList();
+            foreach (var item in mealsInOrders)
+            {
+                await unitOfWork.MealInOrderRepository.DeleteAsync(item);
+            }
+            //await unitOfWork.OrderRepository.DeleteAsync(mappedEntity);
+            unitOfWork.OrderRepository.DeleteId(mappedEntity.Id);
 
-            await unitOfWork.OrderRepository.DeleteAsync(mappedEntity);
             unitOfWork.SaveChanges();
 
             return entity;

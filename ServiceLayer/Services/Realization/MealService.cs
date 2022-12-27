@@ -64,7 +64,8 @@ namespace ServiceLayer.Services
             //var mappedEntity = mapper.Map<MealDTO, Meal>(entity);
             var mappedEntity = MealDTOToMeal(entity);
 
-            await unitOfWork.MealRepository.DeleteAsync(mappedEntity);
+            unitOfWork.MealRepository.DeleteId(mappedEntity.Id);
+            //await unitOfWork.MealRepository.DeleteAsync(mappedEntity);
             unitOfWork.SaveChanges();
 
             return entity;

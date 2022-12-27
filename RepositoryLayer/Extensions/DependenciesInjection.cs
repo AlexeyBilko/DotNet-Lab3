@@ -30,7 +30,8 @@ namespace ServiceLayer.Extensions
             
             services.AddScoped<IPricelistRepository, PricelistRepository>();
 
-            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            //services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddTransient<IUnitOfWork, UnitOfWork>();
         }
     }
 }
